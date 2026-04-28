@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SystemApi;
 using SystemApi.Contracts;
+using SystemApi.Helpers;
 using SystemApi.Middleware;
 using SystemApi.Model;
 using SystemApi.ServiceImplementation;

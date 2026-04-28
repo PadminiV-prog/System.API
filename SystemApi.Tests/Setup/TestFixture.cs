@@ -12,6 +12,8 @@ public class TestFixture
     public Mock<ILogger<SystemApi.Functions.ProcessRequestFunction>> LoggerMock { get; } = new();
     public Mock<ISysService> SysServiceMock { get; } = new();
     public Mock<IValidationService> ValidationServiceMock { get; } = new();
+    public Mock<ITransformAdapterFactory> TransformAdapterFactoryMock { get; } = new();
+    public Mock<ITransformAdapter> TransformAdapterMock { get; } = new();
 
     public FunctionContext CreateFunctionContext(string? correlationId = "test-correlation")
     {

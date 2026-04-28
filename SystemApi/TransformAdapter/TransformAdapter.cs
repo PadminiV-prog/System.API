@@ -2,11 +2,11 @@ using SystemApi.Contracts;
 
 namespace SystemApi.TransformAdapter;
 
-public class DCTransformAdapter : ITransformAdapter
+public class TransformAdapter : ITransformAdapter
 {
     private readonly AppSettings _appSettings;
 
-    public DCTransformAdapter(AppSettings appSettings)
+    public TransformAdapter(AppSettings appSettings)
     {
         _appSettings = appSettings;
     }
@@ -19,7 +19,7 @@ public class DCTransformAdapter : ITransformAdapter
         );
     }
 
-    public async Task<string> ProcessRequestAsync(string requestData, string correlationId)
+    public async Task<string> ProcessRequestAsync(string requestData, string apiKey, string baseUrl, string correlationId)
     {
         return await Task.FromResult("Request processed successfully");
     }

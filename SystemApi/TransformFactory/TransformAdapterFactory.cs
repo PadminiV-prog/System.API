@@ -14,6 +14,6 @@ public class TransformAdapterFactory : ITransformAdapterFactory
 
     public ITransformAdapter GetAdapter()
     {
-        return new DCTransformAdapter(_appSettings);
+        return new SystemApi.TransformAdapter.TransformAdapter(_appSettings);
     }
 }
