@@ -12,5 +12,4 @@ public class ExternalApiRequestModel
     public string Scope { get; set; } = string.Empty;
     public string RequestData { get; set; } = string.Empty;
     public string CorrelationId { get; set; } = string.Empty;
-    public string SourceId { get; set; } = string.Empty;
 }

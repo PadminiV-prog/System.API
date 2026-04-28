@@ -16,15 +16,12 @@ public class RequestHeaderMiddleware : IFunctionsWorkerMiddleware
         var request = await context.GetHttpRequestDataAsync();
 
         var correlationId = TryGetHeaderValue(request, ApplicationConstants.CorrelationIdHeaderKey) ?? Guid.NewGuid().ToString();
-        var sourceId = TryGetHeaderValue(request, ApplicationConstants.SourceIdHeaderKey) ?? ApplicationConstants.DefaultSourceId;
 
         context.Items[ApplicationConstants.CorrelationIdHeaderKey] = correlationId;
-        context.Items[ApplicationConstants.SourceIdHeaderKey] = sourceId;
 
         logger?.LogInformation(
-            "Request headers resolved. CorrelationId: {CorrelationId}, SourceId: {SourceId}",
-            correlationId,
-            sourceId);
+            "Request headers resolved. CorrelationId: {CorrelationId}",
+            correlationId);
 
         await next(context);
     }

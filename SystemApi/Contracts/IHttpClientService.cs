@@ -4,5 +4,5 @@ namespace SystemApi.Contracts;
 
 public interface IHttpClientService
 {
-    Task<string> PostAsync(ExternalApiRequestModel model, string token, string correlationId, string sourceId);
+    Task<string> PostAsync(ExternalApiRequestModel model, string token, string correlationId);
 }

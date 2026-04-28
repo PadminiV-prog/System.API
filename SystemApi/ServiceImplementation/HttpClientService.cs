@@ -17,7 +17,7 @@ public class HttpClientService : IHttpClientService
         _logger = logger;
     }
 
-    public async Task<string> PostAsync(ExternalApiRequestModel model, string token, string correlationId, string sourceId)
+    public async Task<string> PostAsync(ExternalApiRequestModel model, string token, string correlationId)
     {
         var client = _httpClientFactory.CreateClient(ApplicationConstants.HttpClientName);
         var endpoint = BuildEndpoint(model);
@@ -33,7 +33,6 @@ public class HttpClientService : IHttpClientService
         }
 
         request.Headers.TryAddWithoutValidation(ApplicationConstants.CorrelationIdHeaderKey, correlationId);
-        request.Headers.TryAddWithoutValidation(ApplicationConstants.SourceIdHeaderKey, sourceId);
 
         if (!string.IsNullOrWhiteSpace(model.SubscriptionKey))
         {

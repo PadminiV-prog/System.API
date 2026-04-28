@@ -26,7 +26,7 @@ public class SysService : ISysService
         _logger = logger;
     }
 
-    public async Task<string> ProcessRequestAsync(SystemRequest request, string correlationId, string sourceId)
+    public async Task<string> ProcessRequestAsync(SystemRequest request, string correlationId)
     {
         _logger.LogInformation("Entering ProcessRequestAsync. CorrelationId: {CorrelationId}", correlationId);
 
@@ -43,12 +43,11 @@ public class SysService : ISysService
                 : _settings.CacheKeyExternalApi,
             Scope = BuildDefaultScope(_settings.ExternalApiBaseUrl),
             RequestData = JsonConvert.SerializeObject(request),
-            CorrelationId = correlationId,
-            SourceId = sourceId
+            CorrelationId = correlationId
         };
 
         var token = await GetExternalApiTokenAsync(model);
-        var result = await _httpClientService.PostAsync(model, token, correlationId, sourceId);
+        var result = await _httpClientService.PostAsync(model, token, correlationId);
 
         return string.IsNullOrWhiteSpace(result) ? "NoResponse" : result;
     }

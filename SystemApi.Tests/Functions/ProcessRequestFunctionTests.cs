@@ -21,7 +21,7 @@ public class ProcessRequestFunctionTests
             .ReturnsAsync(true);
 
         _fixture.SysServiceMock
-            .Setup(x => x.ProcessRequestAsync(It.IsAny<SystemRequest>(), "test-correlation", "DC"))
+            .Setup(x => x.ProcessRequestAsync(It.IsAny<SystemRequest>(), "test-correlation"))
             .ReturnsAsync("{\"status\":\"ok\"}");
 
         var function = new ProcessRequestFunction(
@@ -62,7 +62,7 @@ public class ProcessRequestFunctionTests
             .ReturnsAsync(true);
 
         _fixture.SysServiceMock
-            .Setup(x => x.ProcessRequestAsync(It.IsAny<SystemRequest>(), "test-correlation", "DC"))
+            .Setup(x => x.ProcessRequestAsync(It.IsAny<SystemRequest>(), "test-correlation"))
             .ThrowsAsync(new Exception("failure"));
 
         var function = new ProcessRequestFunction(

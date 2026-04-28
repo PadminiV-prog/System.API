@@ -44,10 +44,6 @@ public class ProcessRequestFunction
             ? correlation?.ToString() ?? Guid.NewGuid().ToString()
             : Guid.NewGuid().ToString();
 
-        var sourceId = context.Items.TryGetValue(ApplicationConstants.SourceIdHeaderKey, out var source)
-            ? source?.ToString() ?? ApplicationConstants.DefaultSourceId
-            : ApplicationConstants.DefaultSourceId;
-
         _logger.LogInformation("ProcessRequest invoked. CorrelationId: {CorrelationId}", correlationId);
 
         try
@@ -66,7 +62,7 @@ public class ProcessRequestFunction
                 return new BadRequestObjectResult("Invalid request payload.");
             }
 
-            var response = await _sysService.ProcessRequestAsync(request, correlationId, sourceId);
+            var response = await _sysService.ProcessRequestAsync(request, correlationId);
             return new OkObjectResult(response);
         }
         catch (Exception ex)

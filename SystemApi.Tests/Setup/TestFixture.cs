@@ -13,7 +13,7 @@ public class TestFixture
     public Mock<ISysService> SysServiceMock { get; } = new();
     public Mock<IValidationService> ValidationServiceMock { get; } = new();
 
-    public FunctionContext CreateFunctionContext(string? correlationId = "test-correlation", string? sourceId = "DC")
+    public FunctionContext CreateFunctionContext(string? correlationId = "test-correlation")
     {
         var contextMock = new Mock<FunctionContext>();
         var items = new Dictionary<object, object>();
@@ -21,11 +21,6 @@ public class TestFixture
         if (correlationId is not null)
         {
             items[SystemApi.Model.ApplicationConstants.CorrelationIdHeaderKey] = correlationId;
-        }
-
-        if (sourceId is not null)
-        {
-            items[SystemApi.Model.ApplicationConstants.SourceIdHeaderKey] = sourceId;
         }
 
         contextMock.SetupProperty(c => c.Items, items);

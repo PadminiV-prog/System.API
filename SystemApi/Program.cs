@@ -8,6 +8,7 @@ using SystemApi.Contracts;
 using SystemApi.Middleware;
 using SystemApi.Model;
 using SystemApi.ServiceImplementation;
+using SystemApi.TransformFactory;
 
 var environment = Environment.GetEnvironmentVariable("AZURE_ENVIRONMENT")?.ToLowerInvariant() ?? "dev";
 
@@ -50,6 +51,7 @@ var host = new HostBuilder()
         services.AddScoped<IValidationService, ValidationService>();
         services.AddScoped<IHttpClientService, HttpClientService>();
         services.AddScoped<ISysService, SysService>();
+        services.AddScoped<ITransformAdapterFactory, TransformAdapterFactory>();
 
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
