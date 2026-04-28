@@ -2,6 +2,6 @@ namespace SystemApi.Contracts;
 
 public interface ITransformAdapter
 {
-    (string ApiKey, string SubscriptionKey) GetExternalAPIKeys();
+    (string ApiKey, string BaseUrl) GetExternalAPIKeys();
     Task<string> ProcessRequestAsync(string requestData, string correlationId);
 }

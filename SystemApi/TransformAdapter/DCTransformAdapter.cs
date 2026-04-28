@@ -11,7 +11,7 @@ public class DCTransformAdapter : ITransformAdapter
         _appSettings = appSettings;
     }
 
-    public (string ApiKey, string SubscriptionKey) GetExternalAPIKeys()
+    public (string ApiKey, string BaseUrl) GetExternalAPIKeys()
     {
         return (
             _appSettings.ExternalApiSubscriptionKey,
