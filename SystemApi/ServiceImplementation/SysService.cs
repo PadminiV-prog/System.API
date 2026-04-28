@@ -28,9 +28,9 @@ public class SysService : ISysService
     {
         try
         {
-            _logger.LogInformation($"SysService ProcessRequestAsync-> Method entered for correlationId :{correlationId}");
+            _logger.LogInformation("SysService ProcessRequestAsync-> Method entered for correlationId: {CorrelationId}", correlationId);
 
-            if (!GetTransformAdapter(out var adapter, out var errorMessage, correlationId))
+            if (!TryGetTransformAdapter(out var adapter, out var errorMessage, correlationId))
             {
                 return errorMessage ?? "No adapter available.";
             }
@@ -59,19 +59,19 @@ public class SysService : ISysService
         }
         catch (Exception ex)
         {
-            _logger.LogError($"SysService ProcessRequestAsync-> exception occurred and exception message :{ex.Message} for correlationId :{correlationId}");
+            _logger.LogError(ex, "SysService ProcessRequestAsync-> exception occurred for correlationId: {CorrelationId}", correlationId);
             throw;
         }
     }
 
-    private bool GetTransformAdapter(out ITransformAdapter? adapter, out string? errorMessage, string correlationId)
+    private bool TryGetTransformAdapter(out ITransformAdapter? adapter, out string? errorMessage, string correlationId)
     {
         adapter = _transformAdapterFactory.GetAdapter();
         errorMessage = null;
 
         if (adapter is null)
         {
-            _logger.LogError($"SysService ProcessRequestAsync-> No adapter found for correlationId :{correlationId}");
+            _logger.LogError("SysService ProcessRequestAsync-> No adapter found for correlationId: {CorrelationId}", correlationId);
             errorMessage = "No adapter found.";
             return false;
         }
