@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using SystemApi.Contracts;
 using SystemApi.Model;
 
-namespace SystemApi.ServiceImplementation;
+namespace SystemApi.Helpers;
 
 public class ValidationService : IValidationService
 {
