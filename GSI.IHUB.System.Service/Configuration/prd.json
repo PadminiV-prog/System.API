@@ -1,0 +1,14 @@
+{
+  "AppSettings": {
+    "KeyVaultUri": "https://your-prd-keyvault.vault.azure.net/",
+    "ExternalApiBaseUrl": "https://external-api-prd.example.com/system/process",
+    "ExternalApiSubscriptionKey": "",
+    "ExternalApiVersion": "v1",
+    "ExternalApiClientId": "",
+    "ExternalApiClientSecret": "",
+    "ExternalApiTenantId": "",
+    "ExternalApiAuthorityUrl": "",
+    "CacheKeyExternalApi": "ExternalApiToken",
+    "ManagedIdentityClientId": ""
+  }
+}
