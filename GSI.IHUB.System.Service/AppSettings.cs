@@ -12,4 +12,8 @@ public class AppSettings
     public string ExternalApiAuthorityUrl { get; set; } = string.Empty;
     public string CacheKeyExternalApi { get; set; } = string.Empty;
     public string ManagedIdentityClientId { get; set; } = string.Empty;
+
+    // Polly resilience settings
+    public string HttpMaxRetry { get; set; } = string.Empty;
+    public string HttpRetryDuration { get; set; } = string.Empty;
 }

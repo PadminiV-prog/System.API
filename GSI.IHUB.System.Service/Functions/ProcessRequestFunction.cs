@@ -4,7 +4,6 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Net;
 using GSI.IHUB.System.Service.Contracts;
 using GSI.IHUB.System.Service.Model;
@@ -44,31 +43,41 @@ public class ProcessRequestFunction
             ? correlation?.ToString() ?? Guid.NewGuid().ToString()
             : Guid.NewGuid().ToString();
 
-        _logger.LogInformation("ProcessRequest invoked. CorrelationId: {CorrelationId}", correlationId);
+        _logger.LogInformation(
+            "ProcessRequest invoked. CorrelationId: {CorrelationId}",
+            correlationId);
 
         try
         {
             using var reader = new StreamReader(req.Body);
             var body = await reader.ReadToEndAsync();
 
-            if (string.IsNullOrWhiteSpace(body))
+            var (isValid, request) = _validationService.ValidateRequest(body, correlationId);
+            if (!isValid || request is null)
             {
-                return new BadRequestObjectResult("Request body is required.");
-            }
-
-            var request = JsonConvert.DeserializeObject<SystemRequest>(body);
-            if (request is null || !await _validationService.ValidateRequestAsync(request))
-            {
-                return new BadRequestObjectResult("Invalid request payload.");
+                _logger.LogWarning(
+                    "ProcessRequest rejected: validation failed. CorrelationId: {CorrelationId}",
+                    correlationId);
+                return new BadRequestObjectResult(new { message = "Invalid request payload.", correlationId });
             }
 
             var response = await _sysService.ProcessRequestAsync(request, correlationId);
+
+            _logger.LogInformation(
+                "ProcessRequest completed successfully. CorrelationId: {CorrelationId}",
+                correlationId);
             return new OkObjectResult(response);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception while processing request. CorrelationId: {CorrelationId}", correlationId);
-            return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
+            _logger.LogError(
+                ex,
+                "Unhandled exception while processing request. CorrelationId: {CorrelationId}",
+                correlationId);
+            return new ObjectResult(new { message = "An unexpected error occurred.", correlationId })
+            {
+                StatusCode = (int)HttpStatusCode.InternalServerError
+            };
         }
     }
 }

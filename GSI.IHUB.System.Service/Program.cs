@@ -3,6 +3,8 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http.Resilience;
+using Polly;
 using GSI.IHUB.System.Service;
 using GSI.IHUB.System.Service.Contracts;
 using GSI.IHUB.System.Service.Helpers;
@@ -47,7 +49,40 @@ var host = new HostBuilder()
         services.Configure<AppSettings>(context.Configuration.GetSection("AppSettings"));
         services.AddSingleton(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<AppSettings>>().Value);
         services.AddMemoryCache();
-        services.AddHttpClient(ApplicationConstants.HttpClientName);
+
+        // Resolve Polly settings from config, falling back to built-in defaults
+        var maxRetry = int.TryParse(
+            context.Configuration["AppSettings:HttpMaxRetry"],
+            out var r) ? r : ApplicationConstants.MaxRetryCount;
+
+        var retryDelay = int.TryParse(
+            context.Configuration["AppSettings:HttpRetryDuration"],
+            out var d) ? d : ApplicationConstants.PollyRetryInterval;
+
+        services.AddHttpClient(ApplicationConstants.HttpClientName)
+            .AddResilienceHandler("system-service-pipeline", builder =>
+            {
+                // Retry with exponential back-off
+                builder.AddRetry(new HttpRetryStrategyOptions
+                {
+                    MaxRetryAttempts = maxRetry,
+                    Delay = TimeSpan.FromSeconds(retryDelay),
+                    BackoffType = DelayBackoffType.Exponential,
+                    UseJitter = true
+                });
+
+                // Circuit-breaker: open after 50 % failures over a 30-second window
+                builder.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+                {
+                    FailureRatio = 0.5,
+                    SamplingDuration = TimeSpan.FromSeconds(30),
+                    MinimumThroughput = 5,
+                    BreakDuration = TimeSpan.FromSeconds(30)
+                });
+
+                // Per-attempt timeout
+                builder.AddTimeout(TimeSpan.FromSeconds(30));
+            });
 
         services.AddScoped<IValidationService, ValidationService>();
         services.AddScoped<IHttpClientService, HttpClientService>();

@@ -4,5 +4,5 @@ namespace GSI.IHUB.System.Service.Contracts;
 
 public interface IValidationService
 {
-    Task<bool> ValidateRequestAsync(SystemRequest request);
+    (bool IsValid, SystemRequest? Request) ValidateRequest(string? body, string correlationId);
 }

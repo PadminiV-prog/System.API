@@ -19,8 +19,8 @@ public class TransformAdapter : ITransformAdapter
         );
     }
 
-    public async Task<string> ProcessRequestAsync(string requestData, string apiKey, string baseUrl, string correlationId)
+    public Task<string> ProcessRequestAsync(string requestData, string apiKey, string baseUrl, string correlationId)
     {
-        return await Task.FromResult("Request processed successfully");
+        return Task.FromResult("Request processed successfully");
     }
 }
