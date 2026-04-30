@@ -71,7 +71,7 @@ var host = new HostBuilder()
                     UseJitter = true
                 });
 
-                // Circuit-breaker: open after 50 % failures over a 30-second window
+                // Circuit-breaker: open after 50% failures over a 30-second window
                 builder.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
                 {
                     FailureRatio = 0.5,

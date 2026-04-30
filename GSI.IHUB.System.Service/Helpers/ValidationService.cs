@@ -37,7 +37,7 @@ public class ValidationService : IValidationService
         {
             _logger.LogWarning(
                 ex,
-                "Validation failed: unable to deserialise request body. CorrelationId: {CorrelationId}",
+                "Validation failed: unable to deserialize request body. CorrelationId: {CorrelationId}",
                 correlationId);
             return (false, null);
         }
