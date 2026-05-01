@@ -1,11 +1,13 @@
 using Azure.Identity;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http.Resilience;
 using Polly;
 using GSI.IHUB.System.Service;
+using GSI.IHUB.System.Service.Configuration;
 using GSI.IHUB.System.Service.Contracts;
 using GSI.IHUB.System.Service.Helpers;
 using GSI.IHUB.System.Service.Middleware;
@@ -88,6 +90,8 @@ var host = new HostBuilder()
         services.AddScoped<IHttpClientService, HttpClientService>();
         services.AddScoped<ISysService, SysService>();
         services.AddScoped<ITransformAdapterFactory, TransformAdapterFactory>();
+
+        services.AddSingleton<IOpenApiConfigurationOptions, OpenApiConfigurationOptions>();
 
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
