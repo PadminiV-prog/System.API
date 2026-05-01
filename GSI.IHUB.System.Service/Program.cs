@@ -1,13 +1,15 @@
 using Azure.Identity;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Configurations;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http.Resilience;
+using Microsoft.OpenApi.Models;
 using Polly;
 using GSI.IHUB.System.Service;
-using GSI.IHUB.System.Service.Configuration;
 using GSI.IHUB.System.Service.Contracts;
 using GSI.IHUB.System.Service.Helpers;
 using GSI.IHUB.System.Service.Middleware;
@@ -91,7 +93,7 @@ var host = new HostBuilder()
         services.AddScoped<ISysService, SysService>();
         services.AddScoped<ITransformAdapterFactory, TransformAdapterFactory>();
 
-        services.AddSingleton<IOpenApiConfigurationOptions, OpenApiConfigurationOptions>();
+        services.AddSingleton<IOpenApiConfigurationOptions, GSI.IHUB.System.Service.OpenApiConfigurationOptions>();
 
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
@@ -99,3 +101,31 @@ var host = new HostBuilder()
     .Build();
 
 await host.RunAsync();
+
+namespace GSI.IHUB.System.Service
+{
+    /// <summary>
+    /// Configures the OpenAPI/Swagger document metadata for this API.
+    /// Registered in the DI container so the
+    /// <c>Microsoft.Azure.Functions.Worker.Extensions.OpenApi</c> package
+    /// picks it up automatically to generate the Swagger UI and spec.
+    /// </summary>
+    public class OpenApiConfigurationOptions : DefaultOpenApiConfigurationOptions
+    {
+        /// <inheritdoc />
+        public override OpenApiInfo Info { get; set; } = new()
+        {
+            Version     = "v1.0.0",
+            Title       = "GSI IHUB System API",
+            Description = "Pass-through API that integrates with external systems via a secure, observable, and resilient HTTP pipeline.",
+            Contact     = new OpenApiContact
+            {
+                Name = "GSI IHUB Team"
+            }
+        };
+
+        /// <inheritdoc />
+        /// <remarks>Promotes the document to OpenAPI 3.0 (V3).</remarks>
+        public override OpenApiVersionType OpenApiVersion { get; set; } = OpenApiVersionType.V3;
+    }
+}

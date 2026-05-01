@@ -1,4 +1,4 @@
-using GSI.IHUB.System.Service.Configuration;
+using GSI.IHUB.System.Service;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 
